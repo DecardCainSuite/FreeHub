@@ -2,6 +2,10 @@
 
 Newest first. Each release's notes come from `CHANGELOG.md` at the time it was published.
 
+## Free Hub 1.5.6
+
+- Free Minimap's product page: your quests and other addons' icons (Questie, RestedXP, TomTom…) on the region map.
+
 ## Free Hub 1.5.5
 
 - Free Guild's product page: new gallery from in-game screenshots (roster, stats, rules, queue).
