@@ -6,7 +6,6 @@ local ADDON, ns = ...
 
 local MEDIA  = "Interface\\AddOns\\" .. ADDON .. "\\Media\\"
 local WHITE  = "Interface\\Buttons\\WHITE8x8"
-local CIRCLE = MEDIA .. "circle"
 local FONT   = "Fonts\\ARIALN.TTF"
 
 local C = {
@@ -524,7 +523,7 @@ local function Build()
     about:SetScript("OnEnter", function() htitle:SetTextColor(unpack(C.accent)) end)
     about:SetScript("OnLeave", function() htitle:SetTextColor(unpack(C.text)) end)
     about:SetScript("OnClick", function() Select(ADDON); RefreshSidebar() end)
-    for _, e in ipairs(ns.CATALOG) do
+    for _, e in ipairs(ns.CATALOG) do if e.id ~= ADDON then   -- Free Hub itself: the title above opens its page
         local b = CreateFrame("Button", nil, side)
         b:SetSize(SIDE_W - 16, 44)
         b.bg = Fill(b, C.side); b.bg:SetAllPoints()
@@ -536,7 +535,7 @@ local function Build()
         b:SetScript("OnLeave", function(self) if current ~= e.id then self.bg:SetVertexColor(unpack(C.side)) end end)
         b:SetScript("OnClick", function() Select(e.id) end)
         entries[e.id] = b
-    end
+    end end
 
     -- sidebar footer: settings
     local sf = CreateFrame("Frame", nil, side); sf:SetPoint("BOTTOMLEFT", 0, 0); sf:SetPoint("BOTTOMRIGHT", -1, 0); sf:SetHeight(84)

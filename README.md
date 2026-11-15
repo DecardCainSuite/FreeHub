@@ -19,14 +19,14 @@
 
 **One window for all the Free addons.**
 
-Free Hub gathers every Free addon (FreeSwing, Free Unit Frames and the next ones) in a single window. A sidebar lists what you have and what you don't. Click an installed addon and its options open on the right, without juggling separate windows or commands.
+Free Hub gathers every Free addon (Free Unit Frames, Free Bars, FreeSwing, Free Minimap, Free Guild, Free LFG) in a single window. A sidebar lists what you have and what you don't. Click an installed addon and its options open on the right, without juggling separate windows or commands.
 
 ## What it does
 
 | Feature | Details |
 |---|---|
 | **Sidebar** | Installed addons first, then the ones you don't have yet, each with its state (Loaded, Disabled, Not loaded, Not installed) and version. |
-| **Options inside the hub** | FreeSwing and Free Unit Frames options open right next to the sidebar. Their usual commands (`/swing`, `/fuf`) open the hub on the right page. |
+| **Options inside the hub** | Every installed Free addon opens its options right next to the sidebar. Their usual commands (`/fuf`, `/fb`, `/swing`, `/fmm`, `/fg`, `/flfg`) open the hub on the right page. |
 | **Resizable window** | Drag the bottom-right corner: the options spread out to use the room. The hub remembers its size and position. |
 | **Product pages** | Like CurseForge: icon, author, summary, tags, a description and a gallery you can open full size. Also available for addons you haven't installed yet. |
 | **Enable and reload** | Addon installed but disabled? One button enables it and reloads the UI. |
