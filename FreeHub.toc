@@ -2,7 +2,7 @@
 ## Title: Free Hub
 ## Notes: One window for all the Free addons (FreeSwing, Free Unit Frames...).
 ## Author: DecardCain
-## Version: 1.5.4
+## Version: 1.5.5
 ## X-Curse-Project-ID: 1788178
 ## Category: User Interface
 ## IconTexture: Interface\AddOns\FreeHub\Media\icon

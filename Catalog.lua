@@ -223,9 +223,10 @@ ns.CATALOG = {
         },
         gallery = {
             { path = G .. "freeguild_1", title = "Free Guild", text = "Guild ranks, sorted out in a few clicks." },
-            { path = G .. "freeguild_2", title = "Your whole roster, at a glance", text = "Sort, search, filter, select many members at once." },
-            { path = G .. "freeguild_3", title = "Rules that promote for you", text = "Level, class, seniority, last online, notes… mapped to ranks." },
-            { path = G .. "freeguild_4", title = "One click per change", text = "The game allows one rank change per click; Free Guild queues them for you." },
+            { path = G .. "freeguild_2", title = "Your whole roster, at a glance", text = "Sort, search, filter, select many members at once; To change shows who your rules would move." },
+            { path = G .. "freeguild_3", title = "Your guild in numbers", text = "Members by class, level band and rank; click a line to open the roster on it." },
+            { path = G .. "freeguild_4", title = "Rules that promote for you", text = "Level, class, rank, days in the guild, days offline, notes… mapped to ranks." },
+            { path = G .. "freeguild_5", title = "One click per change", text = "The game allows one rank change per click; Free Guild queues them for you." },
         },
     },
     {
