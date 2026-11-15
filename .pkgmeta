@@ -1,0 +1,4 @@
+package-as: FreeHub
+
+ignore:
+  - README.md

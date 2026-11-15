@@ -1,0 +1,17 @@
+## Interface: 16001
+## Title: Free Hub
+## Notes: One window for all the Free addons (FreeSwing, Free Unit Frames...).
+## Author: DecardCain
+## Version: 1.5.3
+## Category: User Interface
+## IconTexture: Interface\AddOns\FreeHub\Media\icon
+## SavedVariables: FreeHubDB
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+
+Defaults.lua
+Catalog.lua
+Hub.lua
