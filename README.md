@@ -1,7 +1,7 @@
 <p align="center"><img src="curseforge/images/FreeHub-logo-400.png" width="120" alt="Free Hub logo"></p>
 <h1 align="center">Free Hub</h1>
 <p align="center">All the Free addons in one window: options side by side, product pages with gallery, and a single minimap button.</p>
-<p align="center"><a href="https://www.curseforge.com/wow/addons/free-hub"><b>Download on CurseForge</b></a> · version <b>1.5.3</b> · WoW Forever (1.60.1) · <code>click the minimap button</code></p>
+<p align="center"><a href="https://www.curseforge.com/wow/addons/free-hub"><b>Download on CurseForge</b></a> · version <b>1.5.4</b> · WoW Forever (1.60.1) · <code>click the minimap button</code></p>
 
 ![Free Hub](curseforge/images/hub_1_banner.png)
 
