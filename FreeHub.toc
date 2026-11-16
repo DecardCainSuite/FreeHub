@@ -7,11 +7,13 @@
 ## Category: User Interface
 ## IconTexture: Interface\AddOns\FreeHub\Media\icon
 ## SavedVariables: FreeHubDB
+## OptionalDeps: LibSharedMedia-3.0, SharedMediaAdditionalFonts
 
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+Libs\LibFreeMedia-1.0\LibFreeMedia-1.0.lua
 
 Defaults.lua
 Catalog.lua

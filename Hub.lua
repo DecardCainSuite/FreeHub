@@ -157,11 +157,93 @@ local function Resize(w, h)
     end
 end
 
+local embeddedFrame, WalkFonts
 local function Unembed()
+    -- the options go back to their addon: give them their own font back (it only changes inside the hub)
+    if embeddedFrame then pcall(WalkFonts, embeddedFrame, nil, 0); embeddedFrame = nil end
     if embedded and registry[embedded] and registry[embedded].unembed then
         pcall(registry[embedded].unembed)
     end
     embedded = nil
+end
+
+-- menu font ------------------------------------------------------------
+-- The player can show every text of this window (sidebar, product pages and the options of the
+-- addons embedded in it) in another font. Only texts in the suite's menu font (Arial Narrow) change:
+-- font previews and pictures keep theirs. Nothing outside this window is touched, and an addon's
+-- options opened on their own keep Arial Narrow. Each text keeps its own size (+ the size offset) and outline.
+local LFM = LibStub and LibStub("LibFreeMedia-1.0", true)
+local fontOrig  = setmetatable({}, { __mode = "k" })  -- [text] = { path, size, flags } set by its addon
+local fontDone  = setmetatable({}, { __mode = "k" })  -- [text] = what we applied (and what GetFont answered)
+local fontLists = setmetatable({}, { __mode = "k" })  -- drop-down lists seen inside the window (refreshed often)
+local menuPath, menuDelta = nil, 0                    -- nil = Arial Narrow, unchanged
+
+local function NormPath(p) return string.lower((string.gsub(tostring(p or ""), "/", "\\"))) end
+local function IsMenuFont(p) return NormPath(p):find("arialn%.ttf$") ~= nil end
+
+local function MenuFontTarget()
+    local key = FreeHubDB and FreeHubDB.menuFont
+    local delta = FreeHubDB and tonumber(FreeHubDB.menuFontSize) or 0
+    local path
+    if key and LFM then path = LFM:FontPath(key, FONT) end
+    if path and IsMenuFont(path) then path = nil end
+    if not path and delta == 0 then return nil, 0 end
+    return path or FONT, delta
+end
+
+local function TouchFont(obj, path, delta)
+    local ok, p, s, fl = pcall(obj.GetFont, obj)
+    if not ok or not p or not s then return end
+    local d = fontDone[obj]
+    if not d or d.got ~= p or math.abs(d.gotSize - s) > 0.05 then
+        -- first time seen, or its addon set a font since our last pass: that font is the reference
+        fontOrig[obj] = { p, s, fl }
+        fontDone[obj], d = nil, nil
+    end
+    local o = fontOrig[obj]
+    if not IsMenuFont(o[1]) then return end
+    if path then
+        local size = math.max(6, o[2] + delta)
+        if d and d.path == path and d.size == size then return end
+        local okSet, res = pcall(obj.SetFont, obj, path, size, o[3] or "")
+        local _, gp, gs = pcall(obj.GetFont, obj)
+        if okSet and res ~= false and gp then
+            fontDone[obj] = { path = path, size = size, got = gp, gotSize = gs or size }
+        else
+            -- the font did not load (an addon's font file can fail the first time): back to the original, retried later
+            pcall(obj.SetFont, obj, o[1], o[2], o[3] or "")
+            fontDone[obj] = nil
+        end
+    elseif d then
+        pcall(obj.SetFont, obj, o[1], o[2], o[3] or "")
+        fontDone[obj] = nil
+    end
+end
+
+function WalkFonts(f, path, delta)
+    if f.fhNoFont then return end
+    if f.GetFrameStrata and f:GetFrameStrata() == "FULLSCREEN_DIALOG" then fontLists[f] = true end
+    if f.GetObjectType and f:GetObjectType() == "EditBox" then TouchFont(f, path, delta) end
+    for _, r in ipairs({ f:GetRegions() }) do
+        if r.GetObjectType and r:GetObjectType() == "FontString" then TouchFont(r, path, delta) end
+    end
+    for _, c in ipairs({ f:GetChildren() }) do WalkFonts(c, path, delta) end
+end
+
+-- full = the whole window; otherwise only the open drop-down lists (they repaint their rows while scrolling)
+local function FontPass(full)
+    if not frame then return end
+    if full then
+        WalkFonts(frame, menuPath, menuDelta)
+    elseif menuPath then
+        for l in pairs(fontLists) do if l:IsShown() then WalkFonts(l, menuPath, menuDelta) end end
+    end
+end
+
+local function ApplyMenuFont()
+    menuPath, menuDelta = MenuFontTarget()
+    FontPass(true)   -- with no font chosen, this puts Arial Narrow back
+    if side and side.fontPick then side.fontPick.paint() end
 end
 
 -- product page -------------------------------------------------------
@@ -471,14 +553,16 @@ function Select(id, forceOptions)
     if reg and reg.embed and State(id) == "loaded" and (forceOptions or not FreeHubDB.pageFirst) then
         local ok, child = pcall(reg.embed, content)
         if ok and child then
-            embedded = id
+            embedded, embeddedFrame = id, child
             Resize(child.fhNaturalW, child.fhNaturalH)
             RefreshSidebar()
+            if menuPath then FontPass(true) end
             return
         end
     end
     if e then ShowPage(e) end
     RefreshSidebar()
+    if menuPath then FontPass(true) end
 end
 
 local function Build()
@@ -538,7 +622,7 @@ local function Build()
     end end
 
     -- sidebar footer: settings
-    local sf = CreateFrame("Frame", nil, side); sf:SetPoint("BOTTOMLEFT", 0, 0); sf:SetPoint("BOTTOMRIGHT", -1, 0); sf:SetHeight(84)
+    local sf = CreateFrame("Frame", nil, side); sf:SetPoint("BOTTOMLEFT", 0, 0); sf:SetPoint("BOTTOMRIGHT", -1, 0); sf:SetHeight(124)
     local sfl = Fill(sf, { 1, 1, 1, 0.06 }, "BORDER"); sfl:SetHeight(1); sfl:SetPoint("TOPLEFT"); sfl:SetPoint("TOPRIGHT")
     local function toggleRow(y, label, get, set)
         local r = CreateFrame("Button", nil, sf); r:SetSize(SIDE_W - 24, 22); r:SetPoint("TOPLEFT", 12, y)
@@ -559,6 +643,113 @@ local function Build()
         function() return FreeHubDB.pageFirst end,
         function(v) FreeHubDB.pageFirst = v end)
 
+    -- menu font: a drop-down (each font shown in itself, opens upwards) and the size offset
+    local fcap = Text(sf, 11, C.dim); fcap:SetPoint("TOPLEFT", 12, -66); fcap:SetText("Menu font")
+    local fsize = Text(sf, 11, C.muted); fsize:SetPoint("TOPRIGHT", -12, -66); fsize:SetJustifyH("RIGHT")
+    local pick = CreateFrame("Button", nil, sf); pick:SetHeight(24)
+    pick:SetPoint("TOPLEFT", 12, -84); pick:SetPoint("TOPRIGHT", -68, -84)
+    local pbg = Fill(pick, C.control); pbg:SetAllPoints(); Border(pick, 0.08)
+    local pval = Text(pick, 12, C.text); pval:SetPoint("LEFT", 8, 0); pval:SetPoint("RIGHT", -20, 0); pval:SetWordWrap(false)
+    local parrow = Text(pick, 11, C.dim); parrow:SetPoint("RIGHT", -7, 0); parrow:SetText("^")
+    pick:SetScript("OnEnter", function() pbg:SetVertexColor(unpack(C.hover)) end)
+    pick:SetScript("OnLeave", function() pbg:SetVertexColor(unpack(C.control)) end)
+    local function sizeButton(label, x, dir)
+        local b = Button(sf, label, 26, false, function()
+            local v = math.max(-3, math.min(3, (tonumber(FreeHubDB.menuFontSize) or 0) + dir))
+            FreeHubDB.menuFontSize = (v ~= 0) and v or nil
+            ApplyMenuFont()
+        end)
+        b:SetHeight(24); b:SetPoint("TOPRIGHT", x, -84)
+        return b
+    end
+    sizeButton("-", -40, -1)
+    sizeButton("+", -12, 1)
+
+    local function FontItems()
+        local out = { { key = false, label = "Default (Arial Narrow)", path = FONT } }
+        if LFM then
+            for _, it in ipairs(LFM:ListFonts() or {}) do
+                if it.key ~= "ARIALN" then out[#out + 1] = { key = it.key, label = it.label, path = it.path } end
+            end
+        end
+        return out
+    end
+    local list = CreateFrame("Frame", nil, frame)
+    list.fhNoFont = true   -- the rows show each font in itself
+    list:SetFrameStrata("FULLSCREEN_DIALOG")
+    list:SetPoint("BOTTOMLEFT", pick, "TOPLEFT", 0, 2)
+    list:SetWidth(230)
+    list:EnableMouse(true); list:EnableMouseWheel(true)
+    list:Hide()
+    local lbg = Fill(list, { 0.11, 0.115, 0.13, 1 }); lbg:SetAllPoints(); Border(list, 0.12)
+    local ROWS, RH, offset, rows = 12, 22, 0, {}
+    local track = Fill(list, { 1, 1, 1, 0.06 }, "OVERLAY"); track:SetWidth(4); track:SetPoint("TOPRIGHT", -2, -2); track:SetPoint("BOTTOMRIGHT", -2, 2)
+    local thumb = Fill(list, C.accent, "OVERLAY", 2); thumb:SetWidth(4)
+    local function render()
+        local items = FontItems()
+        offset = math.max(0, math.min(offset, #items - ROWS))
+        list:SetHeight(math.min(ROWS, #items) * RH + 2)
+        if #items > ROWS then
+            local h = ROWS * RH - 2
+            local th = math.max(16, h * ROWS / #items)
+            thumb:SetHeight(th); thumb:ClearAllPoints()
+            thumb:SetPoint("TOPRIGHT", list, "TOPRIGHT", -2, -2 - (h - th) * offset / (#items - ROWS))
+            track:Show(); thumb:Show()
+        else
+            track:Hide(); thumb:Hide()
+        end
+        local cur = FreeHubDB.menuFont or false
+        for i = 1, ROWS do
+            local it, r = items[i + offset], rows[i]
+            if it then
+                r.key = it.key
+                local ok, res = pcall(r.text.SetFont, r.text, it.path or FONT, 13, "")
+                if not ok or res == false then SetFont(r.text, 13) end
+                r.text:SetText(it.label or "")
+                r.text:SetTextColor(unpack(it.key == cur and C.accent or C.text))
+                r:Show()
+            else
+                r:Hide()
+            end
+        end
+    end
+    for i = 1, ROWS do
+        local r = CreateFrame("Button", nil, list)
+        r:SetHeight(RH)
+        r:SetPoint("TOPLEFT", 1, -1 - (i - 1) * RH); r:SetPoint("TOPRIGHT", -8, -1 - (i - 1) * RH)
+        r.hl = Fill(r, { 1, 1, 1, 0.08 }, "ARTWORK"); r.hl:SetAllPoints(); r.hl:Hide()
+        r.text = Text(r, 13, C.text); r.text:SetPoint("LEFT", 8, 0); r.text:SetPoint("RIGHT", -4, 0); r.text:SetWordWrap(false)
+        r:SetScript("OnEnter", function(s) s.hl:Show() end)
+        r:SetScript("OnLeave", function(s) s.hl:Hide() end)
+        r:SetScript("OnClick", function(s)
+            list:Hide()
+            FreeHubDB.menuFont = s.key or nil
+            ApplyMenuFont()
+        end)
+        rows[i] = r
+    end
+    list:SetScript("OnMouseWheel", function(_, d) offset = offset - d * 3; render() end)
+    pick:SetScript("OnClick", function()
+        if list:IsShown() then list:Hide(); return end
+        offset = 0
+        for i, it in ipairs(FontItems()) do if it.key == (FreeHubDB.menuFont or false) then offset = math.max(0, i - 6) end end
+        list:SetFrameLevel(frame:GetFrameLevel() + 100)
+        render(); list:Show()
+    end)
+    side.fontPick = pick
+    side.fontList = list
+    function pick.paint()
+        local label = "Default (Arial Narrow)"
+        if FreeHubDB.menuFont then
+            label = FreeHubDB.menuFont
+            for _, it in ipairs(FontItems()) do if it.key == FreeHubDB.menuFont then label = it.label end end
+        end
+        pval:SetText(label)
+        local d = tonumber(FreeHubDB.menuFontSize) or 0
+        fsize:SetText("Size " .. (d > 0 and ("+" .. d) or tostring(d)))
+        if list:IsShown() then render() end
+    end
+
     -- content
     content = CreateFrame("Frame", nil, frame)
     content:SetPoint("TOPLEFT", SIDE_W, 0); content:SetPoint("BOTTOMRIGHT")
@@ -573,7 +764,25 @@ local function Build()
 
     frame:SetScript("OnShow", function()
         side.optMinimap.paint(); side.optPage.paint()
+        menuPath, menuDelta = MenuFontTarget()   -- fonts of other addons may have been registered since
+        side.fontPick.paint()
         Select(current or (ns.CATALOG[1] and ns.CATALOG[1].id))
+    end)
+    -- menu font: texts created later (a tab opened for the first time, a page rebuilt) get it at the next
+    -- mouse release or within a second; open drop-down lists are checked ten times a second.
+    local fontClock, listClock, wasDown, pending = 0, 0, false, nil
+    frame:SetScript("OnUpdate", function(_, elapsed)
+        if not menuPath then return end
+        fontClock, listClock = fontClock + elapsed, listClock + elapsed
+        local down = IsMouseButtonDown and (IsMouseButtonDown("LeftButton") or IsMouseButtonDown("RightButton")) or false
+        if wasDown and not down then pending = 0.05 end
+        wasDown = down
+        if pending then
+            pending = pending - elapsed
+            if pending <= 0 then pending = nil; fontClock = 0; FontPass(true) end
+        end
+        if fontClock >= 1 then fontClock = 0; FontPass(true) end
+        if listClock >= 0.1 then listClock = 0; FontPass(false) end
     end)
     -- resize grip (bottom-right corner)
     local grip = CreateFrame("Button", nil, frame)
@@ -592,7 +801,7 @@ local function Build()
 
     -- an embedded addon moves the hub from its own header: remember where it went
     if hooksecurefunc then hooksecurefunc(frame, "StopMovingOrSizing", function() SavePlace() end) end
-    frame:SetScript("OnHide", function() SavePlace(); Unembed() end)
+    frame:SetScript("OnHide", function() SavePlace(); side.fontList:Hide(); Unembed() end)
     Resize()
     frame:Hide()
 end
