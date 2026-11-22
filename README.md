@@ -1,7 +1,7 @@
 <p align="center"><img src="curseforge/images/FreeHub-logo-400.png" width="120" alt="Free Hub logo"></p>
 <h1 align="center">Free Hub</h1>
 <p align="center">All the Free addons in one window: options side by side, product pages with gallery, and a single minimap button.</p>
-<p align="center"><a href="https://www.curseforge.com/wow/addons/free-hub"><b>Download on CurseForge</b></a> · version <b>1.6.0</b> · WoW Forever (1.60.1) · <code>click the minimap button</code></p>
+<p align="center"><a href="https://www.curseforge.com/wow/addons/free-hub"><b>Download on CurseForge</b></a> · version <b>1.6.1</b> · WoW Forever (1.60.1) · <code>click the minimap button</code></p>
 
 ![Free Hub](curseforge/images/hub_1_banner.png)
 
@@ -19,7 +19,7 @@
 
 **One window for all the Free addons.**
 
-Free Hub gathers every Free addon (Free Unit Frames, Free Bars, FreeSwing, Free Minimap, Free Guild, Free LFG) in a single window. A sidebar lists what you have and what you don't. Click an installed addon and its options open on the right, without juggling separate windows or commands.
+Free Hub gathers every Free addon (Free Unit Frames, Free Bars, FreeSwing, Free Minimap, Free Guild, Free LFG, Free Auras) in a single window. A sidebar lists what you have and what you don't. Click an installed addon and its options open on the right, without juggling separate windows or commands.
 
 ## What it does
 
@@ -64,6 +64,7 @@ Addons for WoW Forever that share the same look, profiles and a single minimap b
 | <img src="https://raw.githubusercontent.com/DecardCainSuite/FreeMinimap/main/curseforge/images/FreeMinimap-logo-400.png" width="36"> | **[Free Minimap](https://github.com/DecardCainSuite/FreeMinimap)** — A rectangular minimap of any size, with a region map drawn from the game's own terrain tiles around you. | [CurseForge](https://www.curseforge.com/wow/addons/freeminimap) |
 | <img src="https://raw.githubusercontent.com/DecardCainSuite/FreeGuild/main/curseforge/images/FreeGuild-logo-400.png" width="36"> | **[Free Guild](https://github.com/DecardCainSuite/FreeGuild)** — Guild roster and rank tool for guild masters and officers: filters, bulk ranks, rules that promote for you, stats, raid rosters with attendance, guild info and notes. | [CurseForge](https://www.curseforge.com/wow/addons/freeguild) |
 | <img src="https://raw.githubusercontent.com/DecardCainSuite/FreeLFG/main/curseforge/images/FreeLFG-logo-400.png" width="36"> | **[Free LFG](https://github.com/DecardCainSuite/FreeLFG)** — The group finder as a compact, sortable table: leader, roles, free slots, one-click whisper from a template, and live filters you write yourself. | [CurseForge](https://www.curseforge.com/wow/addons/freelfg) |
+| <img src="https://raw.githubusercontent.com/DecardCainSuite/FreeAuras/main/curseforge/images/FreeAuras-logo-400.png" width="36"> | **[Free Auras](https://github.com/DecardCainSuite/FreeAuras)** — Ready-made ForeverAuras packs, installed in one click: a clean rogue column with combo marks, energy, poisons, buffs and bleeds on one time scale, and cooldowns. | [CurseForge](https://www.curseforge.com/wow/addons/free-auras) |
 
 ## Changelog
 

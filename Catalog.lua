@@ -293,7 +293,7 @@ ns.CATALOG = {
         author = "DecardCain",
         summary = "Ready-made ForeverAuras packs, installed in one click: a clean rogue column with combo marks, energy, poisons, buffs and bleeds on one time scale, and cooldowns.",
         tags = { "Combat", "Buffs & Debuffs" },
-        url = "https://www.curseforge.com/wow/addons/freeauras",
+        url = "https://www.curseforge.com/wow/addons/free-auras",
         description = {
             { p = "Aura packs for |cffedeff3ForeverAuras|r, ready to use. Pick a pack, click |cffedeff3Install|r, check it in ForeverAuras' import window, done. The pictures the packs use come with the addon." },
             { h = "Installing and updating" },
@@ -310,7 +310,7 @@ ns.CATALOG = {
             { li = "|cffedeff3Cooldowns in two rows|r, always the full width: Shank and Riposte (lit after a parry), then your burst (Blade Flurry, Adrenaline Rush, trinkets, an offensive racial) with the wait until all of them are ready; below, Kick, Kidney Shot, Gouge, Blind, then Evasion, Sprint, Vanish and your racial." },
             { li = "|cffedeff3Effects on the icons|r: while Kidney Shot, Gouge or Blind holds your target, or Evasion, Sprint, Vanish, Blade Flurry or Adrenaline Rush runs on you, the icon shows the time left with a draining line, then the cooldown." },
             { li = "|cffedeff3Trinkets|r: left click uses one, right click (out of combat) lists the trinkets in your bags to put on." },
-            { li = "|cffedeff3Weapons and poisons|r: your two weapons side by side with their poison (charges, time left); a weapon without poison is simply greyed out. Left click lists the poisons in your bags and applies the one you pick; right click lists the other weapons for that hand." },
+            { li = "|cffedeff3Weapons and poisons|r: your two weapons side by side with their poison (charges, time left); a weapon without poison is simply greyed out. Left click lists the poisons in your bags and applies the one you pick; right click lists the weapons for that hand. |cffedeff3Both work in combat.|r" },
             { li = "Optional: Slice and Dice as a stylised lightning bolt." },
             { li = "Only the spells you know are shown: it works from level 1." },
             { h = "Requirements" },
@@ -318,6 +318,8 @@ ns.CATALOG = {
             { li = "Keep Free Auras enabled while you use its packs: their pictures are in it." },
         },
         gallery = {
+            { path = G .. "freeauras_1", title = "Free Auras", text = "ForeverAuras packs, ready in one click." },
+            { path = G .. "freeauras_2", title = "The rogue pack, one column", text = "Poisons and weapons, combo marks, energy with the Shank preview, buffs and bleeds on one time scale, cooldowns with their effects." },
         },
     },
     {
@@ -330,7 +332,7 @@ ns.CATALOG = {
         url = "https://www.curseforge.com/wow/addons/free-hub",
         description = {
             { p = "|cffedeff3One window for all the Free addons.|r" },
-            { p = "Free Hub gathers every Free addon (Free Unit Frames, Free Bars, FreeSwing, Free Minimap, Free Guild, Free LFG) in a single window. A sidebar lists what you have and what you don't. Click an installed addon and its options open on the right, without juggling separate windows or commands." },
+            { p = "Free Hub gathers every Free addon (Free Unit Frames, Free Bars, FreeSwing, Free Minimap, Free Guild, Free LFG, Free Auras) in a single window. A sidebar lists what you have and what you don't. Click an installed addon and its options open on the right, without juggling separate windows or commands." },
             { h = "What it does" },
             { li = "|cffedeff3Sidebar|r — Installed addons first, then the ones you don't have yet, each with its state (Loaded, Disabled, Not loaded, Not installed) and version." },
             { li = "|cffedeff3Options inside the hub|r — Every installed Free addon opens its options right next to the sidebar. Their usual commands (|cffff8a3d/fuf|r, |cffff8a3d/fb|r, |cffff8a3d/swing|r, |cffff8a3d/fmm|r, |cffff8a3d/fg|r, |cffff8a3d/flfg|r) open the hub on the right page." },

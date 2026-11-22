@@ -23,7 +23,7 @@
 
 **One window for all the Free addons.**
 
-Free Hub gathers every Free addon (Free Unit Frames, Free Bars, FreeSwing, Free Minimap, Free Guild, Free LFG) in a single window. A sidebar lists what you have and what you don't. Click an installed addon and its options open on the right, without juggling separate windows or commands.
+Free Hub gathers every Free addon (Free Unit Frames, Free Bars, FreeSwing, Free Minimap, Free Guild, Free LFG, Free Auras) in a single window. A sidebar lists what you have and what you don't. Click an installed addon and its options open on the right, without juggling separate windows or commands.
 
 ## What it does
 

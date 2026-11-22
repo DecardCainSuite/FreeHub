@@ -1,6 +1,6 @@
 ## Free Hub 1.6.1
 
-- Free Auras joins the catalogue: its product page (ready-made ForeverAuras packs, installed in one click) shows even before you install it.
+- Free Auras joins the catalogue: its product page (ready-made ForeverAuras packs, installed in one click) with its gallery shows even before you install it, with a link to its CurseForge page.
 
 ## Free Hub 1.6.0
 
